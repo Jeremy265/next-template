@@ -1,0 +1,14 @@
+# public/private mappings
+public:
+  # - host: some_public_host
+  #   port: some_public_port
+  # - host: another_public_host
+  #   port: another_public_port
+private:
+  # - host: some_private_host
+  #   port: some_private_port
+  # - host: another_private_host
+  #   port: another_private_port
+
+
+

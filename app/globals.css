@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 48px;
+}
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 2mm 10mm;
+    }
+
+    #printable {
+        display: table;
+        width: 100%;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}
+
+.no-page-break {
+    page-break-inside: avoid;
+}
+
+main {
+    padding: 0px 48px 0px 48px;
+}
+
+a {
+    text-decoration: none;
+    color: rgb(25, 118, 210);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+q {
+    font-style: italic;
+}
+
+.button {
+    color: var(--toastify-spinner-color) !important;
+    background-color: var(--toastify-color-light) !important;
+}
+.button:hover {
+    color: var(--toastify-color-light) !important;
+    background-color: var(--toastify-spinner-color) !important;
+}
+.success {
+    color: var(--toastify-color-success) !important;
+}
+.info {
+    color: var(--toastify-color-info) !important;
+}
+.warning {
+    color: var(--toastify-color-warning) !important;
+}
+.danger {
+    color: var(--toastify-color-error) !important;
+}
+.button.success:hover {
+    color: var(--toastify-color-light) !important;
+    background-color: var(--toastify-color-success) !important;
+}
+.button.info:hover {
+    color: var(--toastify-color-light) !important;
+    background-color: var(--toastify-color-info) !important;
+}
+.button.warning:hover {
+    color: var(--toastify-color-light) !important;
+    background-color: var(--toastify-color-warning) !important;
+}
+.button.danger:hover {
+    color: var(--toastify-color-light) !important;
+    background-color: var(--toastify-color-error) !important;
+}
+
+tr.create > td:first-child {
+    border-left: 6px solid var(--toastify-color-success);
+}
+
+tr.update > td:first-child {
+    border-left: 6px solid var(--toastify-color-info);
+}
+
+tr.delete > td:first-child {
+    border-left: 6px solid var(--toastify-color-error);
+}
+
+.no-page-break {
+    page-break-inside: avoid;
+}
+
+.page-break {
+    page-break-after: always;
+}
+
+.MuiTableRow-root {
+    vertical-align: top;
+}
+
+span:not(.MuiSpeedDialIcon-root) .MuiSvgIcon-root {
+    vertical-align: middle;
+}
+
+.MuiDayCalendar-monthContainer {
+    padding-top: 3px;
+}
+
+.MuiAccordionSummary-content {
+    margin: 0;
+}
+
+.MuiAutocomplete-popper {
+    min-width: fit-content !important;
+}
+
+.MuiAutocomplete-inputRoot {
+    flex-wrap: nowrap !important;
+}
