@@ -97,6 +97,7 @@ export default function StationTable() {
                 {
                     dataKey: "station",
                     label: "Nom",
+                    filterKey: "nom",
                     render: (station) => {
                         if (!station.station) return "";
                         return `${station.station?.nom}${
