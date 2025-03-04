@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LdapUser } from "./lib/type";
-import { isApiRequest } from "./lib/utils/api.utils";
 import {
     getHeaders,
     getTokenInfo,
     handleMiddlewareRedirection,
+    isApiRequest,
     middlewareRedirections,
 } from "./lib/utils/middleware.utils";
 

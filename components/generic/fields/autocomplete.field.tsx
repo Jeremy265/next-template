@@ -162,7 +162,12 @@ export default function AutocompleteField<T>(props: AutocompleteFieldProps<T>) {
                 options={props.options.sort((a, b) =>
                     getOptionLabel(a).localeCompare(getOptionLabel(b))
                 )}
-                isOptionEqualToValue={(option: T, value: T) => option === value}
+                isOptionEqualToValue={(option: T, value: T) =>
+                    props.schema?.primaryKeyField
+                        ? option[props.schema.primaryKeyField] ===
+                          value[props.schema.primaryKeyField]
+                        : option === value
+                }
                 value={value}
                 disabled={props.disabled}
                 onChange={(_: any, input: any) => {

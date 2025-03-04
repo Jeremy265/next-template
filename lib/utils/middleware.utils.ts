@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LdapUser, MiddlewareRedirection } from "../type";
-import { isApiRequest } from "./api.utils";
+import { formatPathname } from "./string.utils";
 
 const getResponseError = (
     status: number,
@@ -41,6 +41,9 @@ export const getHeaders = (request: NextRequest, user: LdapUser) => {
     requestHeaders.set("authenticated-user", JSON.stringify(user));
     return requestHeaders;
 };
+
+export const isApiRequest = (request: NextRequest) =>
+    formatPathname(request.nextUrl.pathname).startsWith("/api");
 
 export const handleMiddlewareRedirection = (
     request: NextRequest,

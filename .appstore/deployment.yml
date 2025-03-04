@@ -31,7 +31,7 @@ spec:
         spec:
             containers:
                 - image: registry.roqs.basf.net/weather4fr/weather4fr
-                  name: nuxt
+                  name: next
                   ports:
                       - containerPort: 5000
                   resources:

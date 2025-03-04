@@ -57,6 +57,7 @@ export default function Field(props: FieldProps) {
                 <TextField
                     fullWidth={!props.noFullWidth}
                     multiline={props.multiline !== false}
+                    maxRows={10}
                     value={value}
                     error={props.error}
                     helperText={props.helperText}

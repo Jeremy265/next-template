@@ -24,6 +24,11 @@ body {
     page-break-inside: avoid;
 }
 
+header,
+header .MuiTabs-indicator {
+    background-color: #ffffff !important;
+}
+
 main {
     padding: 0px 48px 0px 48px;
 }
@@ -96,6 +101,17 @@ tr.delete > td:first-child {
 
 .page-break {
     page-break-after: always;
+}
+
+.blink {
+    animation: blinker 0.5s linear infinite;
+    color: red;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
 }
 
 .MuiTableRow-root {

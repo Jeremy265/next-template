@@ -1,6 +1,6 @@
 "use client";
 
-import { useFiltersStore } from "@/lib/store/store";
+import { useFiltersStore } from "@/lib/stores/filters";
 import { sortArray } from "@/lib/utils/array.utils";
 import { exportToExcel } from "@/lib/utils/excel.utils";
 import { getReactNodeText } from "@/lib/utils/object.utils";
