@@ -28,6 +28,8 @@ export type AutocompleteFieldProps<T> = {
     getOptionTooltip?: (option: T) => string;
     clearable?: boolean;
     unlimitTags?: boolean;
+    onInput?: (text: string) => void;
+    showAllOptions?: boolean;
 } & FieldProps;
 
 export default function AutocompleteField<T>(props: AutocompleteFieldProps<T>) {
@@ -38,6 +40,7 @@ export default function AutocompleteField<T>(props: AutocompleteFieldProps<T>) {
             )}`,
         trim: true,
     });
+
     const [value, setValue] = useState<T | T[] | null>(
         props.defaultValue || (props.multiple ? [] : null)
     );
@@ -141,10 +144,8 @@ export default function AutocompleteField<T>(props: AutocompleteFieldProps<T>) {
         />
     );
 
-    const filterOptions = (options: any[], params: FilterOptionsState<any>) => {
-        const filtered: T[] = filter(options, params);
-        return filtered;
-    };
+    const filterOptions = (options: any[], params: FilterOptionsState<any>) =>
+        props.showAllOptions ? options : filter(options, params);
 
     return (
         <>
@@ -196,6 +197,10 @@ export default function AutocompleteField<T>(props: AutocompleteFieldProps<T>) {
                         label={props.label}
                         error={props.error}
                         helperText={props.helperText}
+                        onChange={(e) =>
+                            props.onInput &&
+                            props.onInput(e.currentTarget.value)
+                        }
                         required={props.required}
                         placeholder={props.placeholder}
                         focused={props.focused}

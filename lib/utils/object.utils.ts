@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 
 export const getReactNodeText = (node: ReactNode): string => {
-    console.log(node);
     if (!node) return "";
     if (typeof node === "object") {
         if (node instanceof Array) return node.map(getReactNodeText).join("");

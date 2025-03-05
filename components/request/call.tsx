@@ -10,15 +10,17 @@ import { updateObjectOfArray } from "@/lib/utils/array.utils";
 import { errorToString } from "@/lib/utils/errors.utils";
 import { isStationIdValid } from "@/lib/utils/station.utils";
 import { toPlural } from "@/lib/utils/string.utils";
+import { getDisplayPeriod } from "@/lib/utils/time.utils";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import CustomButton from "../generic/button";
 
-export default function Call() {
+export default function CallRequest() {
     const { data, setData } = useDataStore();
     const { settings } = useSettingsStore();
 
-    const [stations, setStations] = useState(data.stations);
+    const [stations, setStations] = useState(data.stations ?? []);
     useEffect(
         () =>
             setData({
@@ -33,7 +35,7 @@ export default function Call() {
 
     const handleApiCall = async () => {
         setStations(
-            stations.map((station) => ({
+            stations?.map((station) => ({
                 ...station,
                 infos: [],
                 loading: false,
@@ -45,8 +47,8 @@ export default function Call() {
         let currentInfos: string[] = [];
         let currentStation: ApiStationFromInformation | null = null;
         let currentMeasures: ApiMeasure[] | null = null;
-        for (let i = 0; i < data.stations.length; i++) {
-            const id = data.stations[i].id;
+        for (let i = 0; i < stations.length; i++) {
+            const id = stations[i].id;
             let currentError = false;
             currentNumberOfTrials++;
             currentInfos.push(`Tentative ${currentNumberOfTrials}`);
@@ -64,7 +66,11 @@ export default function Call() {
                     });
                     currentStation = await getStationDetails(id);
                 }
-                if (data.period.from && data.period.to && !currentMeasures) {
+                if (
+                    data.weatherDataRequestPeriod?.from &&
+                    data.weatherDataRequestPeriod.to &&
+                    !currentMeasures
+                ) {
                     setStation!({
                         id,
                         loading: true,
@@ -74,8 +80,8 @@ export default function Call() {
                     });
                     const orderId = await placeWeatherDataOrder(
                         id,
-                        data.period.from!,
-                        data.period.to!
+                        moment(data.weatherDataRequestPeriod.from),
+                        moment(data.weatherDataRequestPeriod.to)
                     );
                     currentInfos.push(`Commande ${orderId}`);
                     setStation!({
@@ -112,9 +118,9 @@ export default function Call() {
                 currentStation = null;
                 currentMeasures = null;
             }
-            if (i !== data.stations.length - 1) {
+            if (i !== stations.length - 1) {
                 setStation!({
-                    id: data.stations[i + 1].id,
+                    id: stations[i + 1].id,
                     status: "waiting",
                     infos: currentInfos,
                     loading: true,
@@ -128,26 +134,28 @@ export default function Call() {
         }
     };
 
-    const loading = data.stations.some((station) => station.loading);
+    const loading = stations.some((station) => station.loading);
+
     return (
         <CustomButton
             className="info"
             icon={<RocketLaunchIcon />}
             loading={loading}
-            disabled={!data.stations.length}
+            disabled={!stations.length}
             onClick={handleApiCall}>
             Lancer la requête pour{" "}
             {toPlural(
                 "station",
-                data.stations.filter((station) => isStationIdValid(station.id))
+                stations.filter((station) => isStationIdValid(station.id))
                     .length ?? 0,
                 true
             )}{" "}
-            {data.period!.from &&
-                data.period!.to &&
-                `(+ données météo du ${data.period!.from.format(
-                    "DD/MM/YY"
-                )} au ${data.period!.to.format("DD/MM/YY")})`}
+            {data.weatherDataRequestPeriod?.from &&
+                data.weatherDataRequestPeriod.to &&
+                `(+ données météo sur la période ${getDisplayPeriod(
+                    moment(data.weatherDataRequestPeriod.from),
+                    moment(data.weatherDataRequestPeriod.to)
+                )})`}
         </CustomButton>
     );
 }

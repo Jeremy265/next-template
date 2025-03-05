@@ -95,6 +95,7 @@ export default function Helper() {
                 onClose={closeModal}>
                 <Field
                     defaultValue={settings.maxRetry}
+                    type="numeric"
                     label="Nombre maximal de tentative si la requête échoue"
                     onChange={(value) =>
                         setSettings({ ...settings, maxRetry: value })
@@ -104,6 +105,7 @@ export default function Helper() {
                 />
                 <Field
                     defaultValue={settings.delayBeforeRetrieveOrder}
+                    type="numeric"
                     label="Délai entre la création d'une commande de données météo et sa récupération"
                     onChange={(value) =>
                         setSettings({
@@ -116,6 +118,7 @@ export default function Helper() {
                 />
                 <Field
                     defaultValue={settings.delayBeforeNextStation}
+                    type="numeric"
                     label="Délai entre deux stations météo"
                     onChange={(value) =>
                         setSettings({
@@ -128,6 +131,7 @@ export default function Helper() {
                 />
                 <Field
                     defaultValue={settings.numberOfClosestStations}
+                    type="numeric"
                     label="Nombre de stations météo les plus proches à récupérer"
                     onChange={(value) =>
                         setSettings({
@@ -137,7 +141,7 @@ export default function Helper() {
                     }
                     startAdornment={<HolidayVillageIcon />}
                 />
-                <AutocompleteField
+                <AutocompleteField<{ title: string; subtitle: string }>
                     multiple
                     unlimitTags
                     schema={{

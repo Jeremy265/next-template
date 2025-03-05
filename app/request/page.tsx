@@ -1,4 +1,4 @@
-import RequestView from "@/components/request/view";
+import RequestView from "@/components/request/request";
 
 export default function Request() {
     return <RequestView />;

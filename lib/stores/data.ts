@@ -1,16 +1,23 @@
-import { Moment } from "moment";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { StationRow } from "../type";
+import {
+    ApiStationFromInformation,
+    ApiTown,
+    Coordinates,
+    Period,
+    StationRow,
+} from "../type";
 
-export type Data = {
+export type Data = Partial<{
     inputStations: string;
     stations: StationRow[];
-    period: Partial<{
-        from: Moment | null;
-        to: Moment | null;
-    }>;
-};
+    weatherDataRequestPeriod: Partial<Period>;
+    openStationPeriod: Partial<Period>;
+    coordinates: Partial<Coordinates>;
+    town: ApiTown;
+    userPosition: Partial<Coordinates>;
+    closestStations: ApiStationFromInformation[];
+}>;
 
 interface DataState {
     data: Data;
@@ -21,11 +28,7 @@ export const useDataStore = create<DataState>()(
     devtools(
         persist(
             (set) => ({
-                data: {
-                    inputStations: "",
-                    stations: [],
-                    period: { from: null, to: null },
-                },
+                data: {},
                 setData: (data) => set(() => ({ data })),
             }),
             {

@@ -25,10 +25,12 @@ export const toPlural = (
     str: string,
     nb: number,
     printNb: boolean = false
-): string =>
-    `${printNb ? toFixedIfDecimal(nb) : ""} ${str}${
+): string => {
+    console.log(nb, typeof nb);
+    return `${printNb ? toFixedIfDecimal(nb) : ""} ${str}${
         Math.abs(nb) > 1 ? "s" : ""
     }`;
+};
 
 export const toFixedIfDecimal = (value: number, precision?: number): string =>
     value?.toFixed(precision || !Number.isInteger(value) ? precision ?? 1 : 0);

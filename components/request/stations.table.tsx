@@ -53,7 +53,7 @@ export const statuses = {
     },
 };
 
-export default function StationTable() {
+export default function RequestStationTable() {
     const { data } = useDataStore();
 
     return (
@@ -155,8 +155,9 @@ export default function StationTable() {
                         } paramètre(s)`;
                     },
                 },
-                ...((data.period.from && data.period.to) ||
-                data.stations.some((station) => station.measures?.length)
+                ...((data.weatherDataRequestPeriod?.from &&
+                    data.weatherDataRequestPeriod.to) ||
+                data.stations?.some((station) => station.measures?.length)
                     ? [
                           {
                               dataKey: "measures" as keyof StationRow,

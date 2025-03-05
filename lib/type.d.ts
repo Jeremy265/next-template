@@ -270,13 +270,8 @@ export interface ApiStationFromInformation {
         dateDebut: string;
         dateFin: string;
     }[];
+    distance: number;
 }
-
-export type AppStation = ApiStationFromInformation & {
-    measures?: ApiMeasure[];
-    distance?: number;
-    selected?: boolean;
-};
 
 export interface ApiStationFromList {
     Id_station: string;
@@ -319,4 +314,9 @@ export interface ApiTown {
 export interface Coordinates {
     lat: number;
     lon: number;
+}
+
+export interface Period {
+    from: Moment;
+    to: Moment;
 }
