@@ -25,11 +25,14 @@ export default function Call() {
         let currentMeasures: ApiMeasure[] | null = null;
         for (let i = 0; i < state!.stations.length; i++) {
             const id = state!.stations[i].id;
-            if (!isStationIdValid(id)) continue;
             let currentError = false;
             currentNumberOfTrials++;
             currentInfos.push(`Tentative ${currentNumberOfTrials}`);
             try {
+                if (!isStationIdValid(id)) {
+                    currentNumberOfTrials = 3;
+                    throw new Error("Identifiant erroné");
+                }
                 if (!currentStation) {
                     setStation!({
                         id,

@@ -63,6 +63,7 @@ export default function StationTable() {
                 {
                     dataKey: "id",
                     label: "ID Station",
+                    filterKey: "id",
                     render: (station) => (
                         <Chip
                             variant="outlined"
@@ -115,6 +116,7 @@ export default function StationTable() {
                 {
                     dataKey: "station",
                     label: "Coordonnées",
+                    filterKey: "coordinates",
                     render: (station) => {
                         if (!station.station?.positions) return "";
                         const position = station.station.positions.find(
@@ -131,6 +133,7 @@ export default function StationTable() {
                 {
                     dataKey: "station",
                     label: "Statut",
+                    filterKey: "status",
                     render: (station) => {
                         if (!station.station) return "";
                         return `${
@@ -141,6 +144,7 @@ export default function StationTable() {
                 {
                     dataKey: "station",
                     label: "Paramètres",
+                    filterKey: "parameters",
                     render: (station) => {
                         if (!station.station) return "";
                         return `${
@@ -156,6 +160,7 @@ export default function StationTable() {
                           {
                               dataKey: "measures" as keyof StationRow,
                               label: "Données météo",
+                              filterKey: "measures",
                               render: (station: StationRow) => {
                                   const dates = station.measures?.map(
                                       (measure) =>
@@ -188,6 +193,7 @@ export default function StationTable() {
                 {
                     dataKey: "infos",
                     label: "Statut de la requête",
+                    filterKey: "infos",
                     render: (station) => (
                         <ul>
                             {station.infos.map((infos, index) => (
