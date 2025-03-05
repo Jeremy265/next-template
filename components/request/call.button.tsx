@@ -32,16 +32,15 @@ export default function Call() {
         setStations((stations) => updateObjectOfArray(station, "id", stations));
 
     const handleApiCall = async () => {
-        setData({
-            ...data,
-            stations: data.stations.map((station) => ({
+        setStations(
+            stations.map((station) => ({
                 ...station,
                 infos: [],
                 loading: false,
                 measures: [],
                 status: "ready",
-            })),
-        });
+            }))
+        );
         let currentNumberOfTrials = 0;
         let currentInfos: string[] = [];
         let currentStation: ApiStationFromInformation | null = null;

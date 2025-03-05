@@ -9,12 +9,14 @@ import { exportToExcel } from "@/lib/utils/excel.utils";
 import { getDisplayPeriod } from "@/lib/utils/time.utils";
 import DownloadIcon from "@mui/icons-material/Download";
 import moment from "moment";
+import dynamic from "next/dynamic";
 import Aligned from "../generic/aligned";
 import CustomButton from "../generic/button";
-import Call from "./call.button";
 import PeriodInput from "./period.input";
 import StationInput from "./stations.input";
 import StationTable from "./stations.table";
+
+const Call = dynamic(() => import("./call.button"), { ssr: false });
 
 export default function RequestView() {
     const { data } = useDataStore();

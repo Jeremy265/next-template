@@ -8,7 +8,7 @@ export default function PeriodInput() {
     const { data, setData } = useDataStore();
 
     return (
-        <Aligned space={2}>
+        <Aligned top space={2}>
             <Box>
                 <DateField
                     label="Du"
