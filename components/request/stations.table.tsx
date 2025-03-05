@@ -1,3 +1,4 @@
+import { useDataStore } from "@/lib/stores/data";
 import { StationRow } from "@/lib/type";
 import { formatMeasureToExport } from "@/lib/utils/csv.utils";
 import { exportToExcel } from "@/lib/utils/excel.utils";
@@ -9,11 +10,9 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import { Chip, CircularProgress } from "@mui/material";
 import moment from "moment";
-import { useContext } from "react";
 import Aligned from "../generic/aligned";
 import CustomButton from "../generic/button";
 import CustomTable from "../generic/table/table";
-import { RequestContext } from "./view";
 
 export const statuses = {
     error: {
@@ -54,11 +53,11 @@ export const statuses = {
 };
 
 export default function StationTable() {
-    const { state } = useContext(RequestContext);
+    const { data } = useDataStore();
 
     return (
         <CustomTable
-            data={state!.stations ?? []}
+            data={data.stations ?? []}
             columns={[
                 {
                     dataKey: "id",
@@ -155,8 +154,8 @@ export default function StationTable() {
                         } paramètre(s)`;
                     },
                 },
-                ...((state!.period.from && state!.period.to) ||
-                state!.stations.some((station) => station.measures?.length)
+                ...((data.period.from && data.period.to) ||
+                data.stations.some((station) => station.measures?.length)
                     ? [
                           {
                               dataKey: "measures" as keyof StationRow,

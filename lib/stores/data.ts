@@ -1,6 +1,7 @@
 import { Moment } from "moment";
+import { create } from "zustand";
+import { devtools, persist } from "zustand/middleware";
 import { StationRow } from "../type";
-import useCustomStore from "./store";
 
 type Data = {
     inputStations: string;
@@ -11,11 +12,25 @@ type Data = {
     }>;
 };
 
-export const useDataStore = () => {
-    const store = useCustomStore<Data>("data", {
-        inputStations: "",
-        stations: [],
-        period: { from: null, to: null },
-    });
-    return { data: store.state, setData: store.setState };
-};
+interface DataState {
+    data: Data;
+    setData: (data: Data) => void;
+}
+
+export const useDataStore = create<DataState>()(
+    devtools(
+        persist(
+            (set) => ({
+                data: {
+                    inputStations: "",
+                    stations: [],
+                    period: { from: null, to: null },
+                },
+                setData: (data) => set(() => ({ data })),
+            }),
+            {
+                name: "data",
+            }
+        )
+    )
+);

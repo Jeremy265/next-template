@@ -1,3 +1,5 @@
+import SearchView from "@/components/search/view";
+
 export default function Search() {
-    return <div>search</div>;
+    return <SearchView />;
 }

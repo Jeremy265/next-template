@@ -1,30 +1,53 @@
+import { useDataStore } from "@/lib/stores/data";
 import { useSettingsStore } from "@/lib/stores/settings";
-import { ApiMeasure, ApiStationFromInformation } from "@/lib/type";
+import { ApiMeasure, ApiStationFromInformation, StationRow } from "@/lib/type";
 import {
     getStationDetails,
     placeWeatherDataOrder,
     retrieveWeatherDataOrder,
 } from "@/lib/utils/api.utils";
+import { updateObjectOfArray } from "@/lib/utils/array.utils";
 import { errorToString } from "@/lib/utils/errors.utils";
 import { isStationIdValid } from "@/lib/utils/station.utils";
 import { toPlural } from "@/lib/utils/string.utils";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 import CustomButton from "../generic/button";
-import { RequestContext } from "./view";
 
 export default function Call() {
-    const { state, setStation, resetStations } = useContext(RequestContext);
+    const { data, setData } = useDataStore();
     const { settings } = useSettingsStore();
 
+    const [stations, setStations] = useState(data.stations);
+    useEffect(
+        () =>
+            setData({
+                ...data,
+                stations,
+            }),
+        [stations]
+    );
+
+    const setStation = (station: StationRow) =>
+        setStations((stations) => updateObjectOfArray(station, "id", stations));
+
     const handleApiCall = async () => {
-        resetStations!();
+        setData({
+            ...data,
+            stations: data.stations.map((station) => ({
+                ...station,
+                infos: [],
+                loading: false,
+                measures: [],
+                status: "ready",
+            })),
+        });
         let currentNumberOfTrials = 0;
         let currentInfos: string[] = [];
         let currentStation: ApiStationFromInformation | null = null;
         let currentMeasures: ApiMeasure[] | null = null;
-        for (let i = 0; i < state!.stations.length; i++) {
-            const id = state!.stations[i].id;
+        for (let i = 0; i < data.stations.length; i++) {
+            const id = data.stations[i].id;
             let currentError = false;
             currentNumberOfTrials++;
             currentInfos.push(`Tentative ${currentNumberOfTrials}`);
@@ -42,11 +65,7 @@ export default function Call() {
                     });
                     currentStation = await getStationDetails(id);
                 }
-                if (
-                    state!.period.from &&
-                    state!.period.to &&
-                    !currentMeasures
-                ) {
+                if (data.period.from && data.period.to && !currentMeasures) {
                     setStation!({
                         id,
                         loading: true,
@@ -56,8 +75,8 @@ export default function Call() {
                     });
                     const orderId = await placeWeatherDataOrder(
                         id,
-                        state!.period.from!,
-                        state!.period.to!
+                        data.period.from!,
+                        data.period.to!
                     );
                     currentInfos.push(`Commande ${orderId}`);
                     setStation!({
@@ -94,9 +113,9 @@ export default function Call() {
                 currentStation = null;
                 currentMeasures = null;
             }
-            if (i !== state!.stations.length - 1) {
+            if (i !== data.stations.length - 1) {
                 setStation!({
-                    id: state!.stations[i + 1].id,
+                    id: data.stations[i + 1].id,
                     status: "waiting",
                     infos: currentInfos,
                     loading: true,
@@ -110,27 +129,26 @@ export default function Call() {
         }
     };
 
-    const loading = state!.stations.some((station) => station.loading);
+    const loading = data.stations.some((station) => station.loading);
     return (
         <CustomButton
             className="info"
             icon={<RocketLaunchIcon />}
             loading={loading}
-            disabled={!state!.stations.length}
+            disabled={!data.stations.length}
             onClick={handleApiCall}>
             Lancer la requête pour{" "}
             {toPlural(
                 "station",
-                state!.stations.filter((station) =>
-                    isStationIdValid(station.id)
-                ).length ?? 0,
+                data.stations.filter((station) => isStationIdValid(station.id))
+                    .length ?? 0,
                 true
             )}{" "}
-            {state!.period!.from &&
-                state!.period!.to &&
-                `(+ données météo du ${state!.period!.from.format(
+            {data.period!.from &&
+                data.period!.to &&
+                `(+ données météo du ${data.period!.from.format(
                     "DD/MM/YY"
-                )} au ${state!.period!.to.format("DD/MM/YY")})`}
+                )} au ${data.period!.to.format("DD/MM/YY")})`}
         </CustomButton>
     );
 }
