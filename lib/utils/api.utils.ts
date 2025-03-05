@@ -11,6 +11,7 @@ import {
 } from "../type";
 import { parseCsv } from "./csv.utils";
 import HttpError, { errorToString } from "./errors.utils";
+import { formatUrl } from "./string.utils";
 
 export const wrapApiCall = async (f: () => any): Promise<NextResponse> => {
     try {
@@ -36,7 +37,7 @@ export const wrapApiCall = async (f: () => any): Promise<NextResponse> => {
 export const getNeighborDepartements = (
     postalCode: string
 ): Promise<string[]> =>
-    fetch(`/api/neighbors/${postalCode}`).then((res) => res.json());
+    fetch(formatUrl(`api/neighbors/${postalCode}`)).then((res) => res.json());
 
 export const fetchExternalApi = async (
     url: string,
