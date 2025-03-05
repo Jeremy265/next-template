@@ -12,6 +12,7 @@ import {
     Tooltip,
     Typography,
 } from "@mui/material";
+import moment from "moment";
 import { Fragment, isValidElement, useState } from "react";
 import { TableColumnType } from "./column";
 import CustomTable, { TableCollapsableColumn } from "./table";
@@ -29,7 +30,7 @@ export const getCellContentToString = <T,>(
 export const getCellContent = <T,>(data: T, column: TableColumnType<T>) => {
     if (column.render) return column.render(data);
     const content = data[column.dataKey];
-    if (content instanceof Date) return formatDate(content);
+    if (content instanceof Date) return formatDate(moment(content));
     if (typeof content === "boolean") return content ? "Oui" : "Non";
     return content ? String(content) : "";
 };
