@@ -6,6 +6,7 @@ import {
     formatStationToExport,
 } from "@/lib/utils/csv.utils";
 import { exportToExcel } from "@/lib/utils/excel.utils";
+import { getDisplayPeriod } from "@/lib/utils/time.utils";
 import DownloadIcon from "@mui/icons-material/Download";
 import moment from "moment";
 import Aligned from "../generic/aligned";
@@ -55,8 +56,8 @@ export default function RequestView() {
                             )
                         }>
                         {measuresToExport.length} données météo (
-                        {moment.min(dates).format("DD/MM/YY")}-
-                        {moment.max(dates).format("DD/MM/YY")})
+                        {getDisplayPeriod(moment.min(dates), moment.max(dates))}
+                        )
                     </CustomButton>
                 )}
                 {Boolean(stationsToExport.length) && (

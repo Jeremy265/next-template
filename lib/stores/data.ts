@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { StationRow } from "../type";
 
-type Data = {
+export type Data = {
     inputStations: string;
     stations: StationRow[];
     period: Partial<{

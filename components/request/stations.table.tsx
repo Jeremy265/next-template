@@ -2,6 +2,7 @@ import { useDataStore } from "@/lib/stores/data";
 import { StationRow } from "@/lib/type";
 import { formatMeasureToExport } from "@/lib/utils/csv.utils";
 import { exportToExcel } from "@/lib/utils/excel.utils";
+import { getDisplayPeriod } from "@/lib/utils/time.utils";
 import CastIcon from "@mui/icons-material/Cast";
 import CheckIcon from "@mui/icons-material/Check";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -180,9 +181,10 @@ export default function StationTable() {
                                               )
                                           }>
                                           {station.measures!.length} mesures (
-                                          {moment.min(dates).format("DD/MM/YY")}
-                                          -
-                                          {moment.max(dates).format("DD/MM/YY")}
+                                          {getDisplayPeriod(
+                                              moment.min(dates),
+                                              moment.max(dates)
+                                          )}
                                           )
                                       </CustomButton>
                                   );
