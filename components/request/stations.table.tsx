@@ -26,17 +26,22 @@ export const statuses = {
         color: "info",
         icon: <HourglassEmptyIcon />,
     },
-    "get-station-infos": {
+    waiting: {
+        label: "En attente",
+        color: "info",
+        icon: <HourglassEmptyIcon />,
+    },
+    "getting-station-details": {
         label: "Récupération de la station",
         color: "warning",
         icon: <CastIcon />,
     },
-    "place-order": {
+    "placing-order": {
         label: "Génération de la commande",
         color: "warning",
         icon: <WbSunnyIcon />,
     },
-    "retrieve-order": {
+    "retrieving-order": {
         label: "Récupération de la commande",
         color: "warning",
         icon: <CastIcon />,
@@ -145,13 +150,12 @@ export default function StationTable() {
                         } paramètre(s)`;
                     },
                 },
-                ...(state!.period.from && state!.period.to
+                ...((state!.period.from && state!.period.to) ||
+                state!.stations.some((station) => station.measures?.length)
                     ? [
                           {
                               dataKey: "measures" as keyof StationRow,
-                              label: `Données météo du ${state!.period.from.format(
-                                  "DD/MM/YY"
-                              )} au ${state!.period.to.format("DD/MM/YY")}`,
+                              label: "Données météo",
                               render: (station: StationRow) => {
                                   const dates = station.measures?.map(
                                       (measure) =>

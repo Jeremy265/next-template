@@ -8,7 +8,6 @@ import {
 import { errorToString } from "@/lib/utils/errors.utils";
 import { isStationIdValid } from "@/lib/utils/station.utils";
 import { toPlural } from "@/lib/utils/string.utils";
-import PanToolIcon from "@mui/icons-material/PanTool";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import { useContext } from "react";
 import CustomButton from "../generic/button";
@@ -27,6 +26,7 @@ export default function Call() {
         for (let i = 0; i < state!.stations.length; i++) {
             const id = state!.stations[i].id;
             if (!isStationIdValid(id)) continue;
+            let currentError = false;
             currentNumberOfTrials++;
             currentInfos.push(`Tentative ${currentNumberOfTrials}`);
             try {
@@ -34,113 +34,95 @@ export default function Call() {
                     setStation!({
                         id,
                         loading: true,
-                        status: "get-station-infos",
+                        status: "getting-station-details",
                         infos: currentInfos,
                     });
                     currentStation = await getStationDetails(id);
-                    setStation!({
-                        id,
-                        loading: true,
-                        status: "get-station-infos",
-                        infos: currentInfos,
-                        station: currentStation,
-                    });
                 }
-
                 if (
                     state!.period.from &&
                     state!.period.to &&
                     !currentMeasures
                 ) {
-                    await new Promise((resolve) =>
-                        setTimeout(resolve, settings.delayBeforeRetrieveOrder)
-                    );
                     setStation!({
                         id,
                         loading: true,
-                        status: "place-order",
+                        status: "placing-order",
                         infos: currentInfos,
                         station: currentStation,
                     });
                     const orderId = await placeWeatherDataOrder(
                         id,
-                        state!.period.from,
-                        state!.period.to
+                        state!.period.from!,
+                        state!.period.to!
                     );
                     currentInfos.push(`Commande ${orderId}`);
                     setStation!({
                         id,
                         loading: true,
-                        status: "place-order",
+                        status: "retrieving-order",
                         infos: currentInfos,
                         station: currentStation,
                     });
                     await new Promise((resolve) =>
                         setTimeout(resolve, settings.delayBeforeRetrieveOrder)
                     );
-                    setStation!({
-                        id,
-                        loading: true,
-                        status: "retrieve-order",
-                        infos: currentInfos,
-                        station: currentStation,
-                    });
                     currentMeasures = await retrieveWeatherDataOrder(orderId);
                     currentInfos.push(
                         `${currentMeasures.length} dates récupérées`
                     );
                 }
-
-                setStation!({
-                    id,
-                    loading: false,
-                    status: "done",
-                    infos: currentInfos,
-                    station: currentStation,
-                    measures: currentMeasures ?? [],
-                });
+            } catch (error: unknown) {
+                currentError = true;
+                currentInfos.push(errorToString(error));
+                if (currentNumberOfTrials < 3) i--;
+            }
+            setStation!({
+                id,
+                status: currentError ? "error" : "done",
+                infos: currentInfos,
+                loading: false,
+                station: currentStation ?? undefined,
+                measures: currentMeasures ?? [],
+            });
+            if (!currentError || currentNumberOfTrials === 3) {
                 currentNumberOfTrials = 0;
                 currentInfos = [];
                 currentStation = null;
                 currentMeasures = null;
-            } catch (error: unknown) {
-                currentInfos.push(errorToString(error));
+            }
+            if (i !== state!.stations.length - 1) {
                 setStation!({
-                    id,
-                    status: "error",
+                    id: state!.stations[i + 1].id,
+                    status: "waiting",
                     infos: currentInfos,
-                    loading: false,
+                    loading: true,
                     station: currentStation ?? undefined,
                     measures: currentMeasures ?? [],
                 });
-                if (currentNumberOfTrials < 3) i--;
-                else {
-                    currentNumberOfTrials = 0;
-                    currentInfos = [];
-                }
-            }
-            if (i !== state!.stations.length - 1)
                 await new Promise((resolve) =>
                     setTimeout(resolve, settings.delayBeforeNextStation)
                 );
+            }
         }
     };
-    const loading = false;
+
+    const loading = state!.stations.some((station) => station.loading);
     return (
         <CustomButton
-            className={loading ? "danger" : "info"}
-            icon={loading ? <PanToolIcon /> : <RocketLaunchIcon />}
+            className="info"
+            icon={<RocketLaunchIcon />}
+            loading={loading}
             disabled={!state!.stations.length}
-            onClick={loading ? () => false : handleApiCall}>
-            {loading
-                ? "Stop"
-                : `Lancer la requête pour ${toPlural(
-                      "station",
-                      state!.stations.filter(
-                          (station) => station.status !== "error"
-                      ).length ?? 0,
-                      true
-                  )}`}{" "}
+            onClick={handleApiCall}>
+            Lancer la requête pour{" "}
+            {toPlural(
+                "station",
+                state!.stations.filter((station) =>
+                    isStationIdValid(station.id)
+                ).length ?? 0,
+                true
+            )}{" "}
             {state!.period!.from &&
                 state!.period!.to &&
                 `(+ données météo du ${state!.period!.from.format(

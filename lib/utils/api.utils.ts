@@ -38,7 +38,7 @@ export const getNeighborDepartements = (
 ): Promise<string[]> =>
     fetch(`/api/neighbors/${postalCode}`).then((res) => res.json());
 
-export const fetchExternalApi = (
+export const fetchExternalApi = async (
     url: string,
     hasJsonResponse: boolean = false
 ) =>

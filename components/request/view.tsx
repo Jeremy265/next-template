@@ -9,7 +9,6 @@ import {
 import { exportToExcel } from "@/lib/utils/excel.utils";
 import { isStationIdValid } from "@/lib/utils/station.utils";
 import DownloadIcon from "@mui/icons-material/Download";
-import { Box } from "@mui/material";
 import moment, { Moment } from "moment";
 import { createContext, useEffect, useState } from "react";
 import Aligned from "../generic/aligned";
@@ -134,9 +133,9 @@ export default function RequestView() {
                 <StationInput />
                 <PeriodInput />
                 <StationTable />
-                <Box textAlign="center">
+                <Aligned col centered>
                     <Call />
-                    {measuresToExport.length && (
+                    {Boolean(measuresToExport.length) && (
                         <CustomButton
                             icon={<DownloadIcon />}
                             className="success"
@@ -148,7 +147,7 @@ export default function RequestView() {
                             {moment.max(dates).format("DD/MM/YY")})
                         </CustomButton>
                     )}
-                    {stationsToExport.length && (
+                    {Boolean(stationsToExport.length) && (
                         <CustomButton
                             icon={<DownloadIcon />}
                             className="success"
@@ -158,7 +157,7 @@ export default function RequestView() {
                             {stationsToExport.length} stations
                         </CustomButton>
                     )}
-                </Box>
+                </Aligned>
             </RequestContext.Provider>
         </Aligned>
     );
