@@ -134,6 +134,7 @@ export default function StationTable() {
                     dataKey: "station",
                     label: "Statut",
                     filterKey: "status",
+                    selectable: true,
                     render: (station) => {
                         if (!station.station) return "";
                         return `${

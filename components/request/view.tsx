@@ -140,7 +140,14 @@ export default function RequestView() {
                             icon={<DownloadIcon />}
                             className="success"
                             onClick={() =>
-                                exportToExcel(`mesures`, measuresToExport)
+                                exportToExcel(
+                                    `mesures_meteo_${moment
+                                        .min(dates)
+                                        .format("DDMMYY")}_au_${moment
+                                        .max(dates)
+                                        .format("DDMMYY")}`,
+                                    measuresToExport
+                                )
                             }>
                             {measuresToExport.length} données météo (
                             {moment.min(dates).format("DD/MM/YY")}-
@@ -152,7 +159,10 @@ export default function RequestView() {
                             icon={<DownloadIcon />}
                             className="success"
                             onClick={() =>
-                                exportToExcel(`stations`, stationsToExport)
+                                exportToExcel(
+                                    `stations_meteo`,
+                                    stationsToExport
+                                )
                             }>
                             {stationsToExport.length} stations
                         </CustomButton>
