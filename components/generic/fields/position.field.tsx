@@ -20,7 +20,7 @@ export default function PositionField() {
                     navigator.geolocation.getCurrentPosition(resolve, (error) =>
                         reject(
                             error.PERMISSION_DENIED
-                                ? "La permission pour votre géolocalisation n'a pas pu être obtenue"
+                                ? "La permission de vous géolocaliser n'a pas pu être obtenue"
                                 : error.POSITION_UNAVAILABLE
                                 ? "Votre position n'a pas pu être déterminée"
                                 : error.TIMEOUT
