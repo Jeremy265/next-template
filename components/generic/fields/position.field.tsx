@@ -61,7 +61,11 @@ export default function PositionField() {
             onClick={async () => {
                 if (!data.userPosition?.lat || !data.userPosition.lon)
                     return toast.error("Votre position est inconnue");
-                setData({ ...data, coordinates: data.userPosition });
+                setData({
+                    ...data,
+                    town: undefined,
+                    coordinates: data.userPosition,
+                });
             }}>
             Utiliser ma position
         </CustomButton>
