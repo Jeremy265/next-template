@@ -5,12 +5,6 @@ export async function GET(
     _: NextRequest,
     props: { params: Promise<{ postal_code: string }> }
 ) {
-    +console.log(
-        "calling",
-        `https://www.villes-voisines.fr/getcp.php?cp=${
-            (await props.params).postal_code
-        }&rayon=30`
-    );
     return wrapApiCall(
         async () =>
             await fetch(
@@ -19,20 +13,20 @@ export async function GET(
                         await props.params
                     ).postal_code
                 }&rayon=30`
-            ).then((res) => {
-                console.log("res", res);
-                return res
-                    .json()
-                    .then((neighbors: { code_postal: string }[]) => {
-                        console.log("neighbors", neighbors);
-                        return Array.from(
-                            new Set(
-                                Object.values(neighbors).map((neighbor) =>
-                                    neighbor.code_postal.slice(0, 2)
+            )
+                .then((res) =>
+                    res
+                        .json()
+                        .then((neighbors: { code_postal: string }[]) =>
+                            Array.from(
+                                new Set(
+                                    Object.values(neighbors).map((neighbor) =>
+                                        neighbor.code_postal.slice(0, 2)
+                                    )
                                 )
                             )
-                        );
-                    });
-            })
+                        )
+                )
+                .catch((error: unknown) => console.log(error))
     );
 }
