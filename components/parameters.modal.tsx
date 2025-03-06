@@ -17,11 +17,12 @@ export default function ParametersModal(props: Props) {
 
     return (
         <CustomModal
-            title={`Paramètres de la station ${props.station?.id}`}
-            subtitle={props.station?.nom}
+            title="Paramètres de la station"
+            subtitle={`${props.station?.id}, ${props.station?.nom}`}
             open={open}
             onClose={props.onClose}>
             <CustomTable
+                title={props.station?.nom}
                 data={props.station?.parametres ?? []}
                 columns={[
                     {

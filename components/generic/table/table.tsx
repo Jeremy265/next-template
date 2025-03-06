@@ -155,7 +155,7 @@ export default function CustomTable<T>(props: Props<T>) {
                             onClick={() =>
                                 exportToExcel(
                                     getReactNodeText(props.title) ||
-                                        "Export_Inventaire",
+                                        "Export_Weather4fr",
                                     sortedRows.map((row) => {
                                         const datum: {
                                             [key: string]: any;
