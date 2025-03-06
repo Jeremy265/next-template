@@ -35,20 +35,20 @@ export default function CallRequest() {
 
     const handleApiCall = async () => {
         setStations(
-            stations?.map((station) => ({
+            data.stations?.map((station) => ({
                 ...station,
                 infos: [],
                 loading: false,
                 measures: [],
                 status: "ready",
-            }))
+            })) ?? []
         );
         let currentNumberOfTrials = 0;
         let currentInfos: string[] = [];
         let currentStation: ApiStationFromInformation | null = null;
         let currentMeasures: ApiMeasure[] | null = null;
-        for (let i = 0; i < stations.length; i++) {
-            const id = stations[i].id;
+        for (let i = 0; i < (data.stations ?? []).length; i++) {
+            const id = data.stations![i].id;
             let currentError = false;
             currentNumberOfTrials++;
             currentInfos.push(`Tentative ${currentNumberOfTrials}`);
@@ -141,12 +141,12 @@ export default function CallRequest() {
             className="info"
             icon={<RocketLaunchIcon />}
             loading={loading}
-            disabled={!stations.length}
+            disabled={!data.stations?.length}
             onClick={handleApiCall}>
             Lancer la requête pour{" "}
             {toPlural(
                 "station",
-                stations.filter((station) => isStationIdValid(station.id))
+                data.stations?.filter((station) => isStationIdValid(station.id))
                     .length ?? 0,
                 true
             )}{" "}
