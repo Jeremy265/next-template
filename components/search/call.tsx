@@ -7,7 +7,7 @@ import {
 } from "@/lib/type";
 import {
     getCommuneByCoordinates,
-    getNeighborDepartements,
+    getNeighborDepartementsByStaticArray,
     getStationDetails,
     getStationsByDepartement,
 } from "@/lib/utils/api.utils";
@@ -37,12 +37,12 @@ export default function CallSearch() {
                     getCommuneByCoordinates(data.coordinates as Coordinates),
                     {
                         pending:
-                            "Récupération du code postal de la commune des coordonnées sélectionnées",
+                            "Récupération du code du département de la commune des coordonnées sélectionnées",
                         success: {
                             render({ data }) {
-                                return `Code insee de ${
+                                return `Code département de ${
                                     data[0]!.nom
-                                } récupéré : ${data[0]!.code}`;
+                                } récupéré : ${data[0]!.codeDepartement}`;
                             },
                         },
                         error: {
@@ -55,9 +55,19 @@ export default function CallSearch() {
             )[0]!;
 
             const neighborDepartements = await toast.promise(
-                getNeighborDepartements(commune.code),
+                new Promise<string[]>((resolve, reject) => {
+                    try {
+                        resolve(
+                            getNeighborDepartementsByStaticArray(
+                                commune.codeDepartement
+                            )
+                        );
+                    } catch (error: unknown) {
+                        reject(error);
+                    }
+                }),
                 {
-                    pending: `Récupération des départements voisins à ${commune.nom}`,
+                    pending: `Récupération des départements voisins au ${commune.codeDepartement}`,
                     success: {
                         render({ data }) {
                             return `Départements voisins récupérés : ${data.join(

@@ -11,6 +11,7 @@ import {
 } from "../type";
 import { parseCsv } from "./csv.utils";
 import HttpError, { errorToString } from "./errors.utils";
+import { neighborDepartments } from "./neighborDepartments";
 
 export const wrapApiCall = async (f: () => any): Promise<NextResponse> => {
     try {
@@ -57,7 +58,40 @@ export const fetchExternalApi = async (
             : response.text().then((data) => data);
     });
 
-export const getNeighborDepartements = (insee: string): Promise<string[]> =>
+export const getNeighborDepartementsByVillesVoisines = (
+    codePostal: string
+): Promise<string[]> =>
+    fetchExternalApi(
+        `https://www.villes-voisines.fr/getcp.php?cp=${codePostal}&rayon=30`,
+        true
+    ).then((neighbors: { code_postal: string }[]) =>
+        Array.from(
+            new Set(
+                Object.values(neighbors).map((neighbor) =>
+                    neighbor.code_postal.slice(0, 2)
+                )
+            )
+        )
+    );
+
+export const getNeighborDepartementsByStaticArray = (
+    codeDepartement: string
+): string[] => {
+    if (!Object.keys(neighborDepartments).includes(codeDepartement))
+        throw new Error(
+            `Le département ${codeDepartement} n'est pas dans la liste des départements`
+        );
+    return [
+        codeDepartement,
+        ...neighborDepartments[
+            codeDepartement as keyof typeof neighborDepartments
+        ],
+    ];
+};
+
+export const getNeighborDepartementsByGouv = (
+    insee: string
+): Promise<string[]> =>
     fetchExternalApi(
         `https://tabular-api.data.gouv.fr/api/resources/f764804e-1abf-4dbf-82b5-6af2e17c22de/data/?insee__exact=${insee}`,
         true
@@ -83,9 +117,9 @@ export const getTownsByNameOrPostalCode = (
 
 export const getCommuneByCoordinates = (
     coordinates: Coordinates
-): Promise<Pick<ApiTown, "nom" | "code">[]> =>
+): Promise<{ codeDepartement: string; nom: string; code: string }[]> =>
     fetchExternalApi(
-        `https://geo.api.gouv.fr/communes?lat=${coordinates.lat}&lon=${coordinates.lon}&fields=code`,
+        `https://geo.api.gouv.fr/communes?lat=${coordinates.lat}&lon=${coordinates.lon}&fields=codeDepartement`,
         true
     );
 
