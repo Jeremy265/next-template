@@ -32,7 +32,7 @@ export default function CallSearch() {
         const closestStations: ApiStationFromInformation[] = [];
         setData({ ...data, closestStations });
         try {
-            const codePostal = (
+            const commune = (
                 await toast.promise(
                     getCommuneByCoordinates(data.coordinates as Coordinates),
                     {
@@ -40,9 +40,9 @@ export default function CallSearch() {
                             "Récupération du code postal de la commune des coordonnées sélectionnées",
                         success: {
                             render({ data }) {
-                                return `Code postal de la commune des coordonnées sélectionnées récupéré : ${
-                                    data[0]!.codesPostaux[0]
-                                }`;
+                                return `Code insee de ${
+                                    data[0]!.nom
+                                } récupéré : ${data[0]!.code}`;
                             },
                         },
                         error: {
@@ -52,12 +52,12 @@ export default function CallSearch() {
                         },
                     }
                 )
-            )[0]!.codesPostaux[0];
+            )[0]!;
 
             const neighborDepartements = await toast.promise(
-                getNeighborDepartements(codePostal),
+                getNeighborDepartements(commune.code),
                 {
-                    pending: `Récupération des départements voisins au ${codePostal}`,
+                    pending: `Récupération des départements voisins à ${commune.nom}`,
                     success: {
                         render({ data }) {
                             return `Départements voisins récupérés : ${data.join(

@@ -11,7 +11,6 @@ import {
 } from "../type";
 import { parseCsv } from "./csv.utils";
 import HttpError, { errorToString } from "./errors.utils";
-import { formatUrl } from "./string.utils";
 
 export const wrapApiCall = async (f: () => any): Promise<NextResponse> => {
     try {
@@ -33,11 +32,6 @@ export const wrapApiCall = async (f: () => any): Promise<NextResponse> => {
         });
     }
 };
-
-export const getNeighborDepartements = (
-    postalCode: string
-): Promise<string[]> =>
-    fetch(formatUrl(`api/neighbors/${postalCode}`)).then((res) => res.json());
 
 export const fetchExternalApi = async (
     url: string,
@@ -63,6 +57,20 @@ export const fetchExternalApi = async (
             : response.text().then((data) => data);
     });
 
+export const getNeighborDepartements = (insee: string): Promise<string[]> =>
+    fetchExternalApi(
+        `https://tabular-api.data.gouv.fr/api/resources/f764804e-1abf-4dbf-82b5-6af2e17c22de/data/?insee__exact=${insee}`,
+        true
+    ).then(({ data }: { data: { insee_voisins: string }[] }) =>
+        Array.from(
+            new Set(
+                data[0].insee_voisins
+                    .split("|")
+                    .map((inseeVoisin) => inseeVoisin.slice(0, 2))
+            )
+        )
+    );
+
 export const getTownsByNameOrPostalCode = (
     nameOrPostalCode: string
 ): Promise<ApiTown[]> =>
@@ -75,9 +83,9 @@ export const getTownsByNameOrPostalCode = (
 
 export const getCommuneByCoordinates = (
     coordinates: Coordinates
-): Promise<Pick<ApiTown, "nom" | "code" | "codesPostaux">[]> =>
+): Promise<Pick<ApiTown, "nom" | "code">[]> =>
     fetchExternalApi(
-        `https://geo.api.gouv.fr/communes?lat=${coordinates.lat}&lon=${coordinates.lon}&fields=codesPostaux`,
+        `https://geo.api.gouv.fr/communes?lat=${coordinates.lat}&lon=${coordinates.lon}&fields=code`,
         true
     );
 
