@@ -1,13 +1,12 @@
 "use client";
 
-import { LatLngExpression } from "leaflet";
-
-import { Circle, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-
 import { useDataStore } from "@/lib/stores/data";
+import { LatLngExpression } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet/dist/leaflet.css";
+import { MapContainer, Marker, Popup, TileLayer, Tooltip } from "react-leaflet";
+import Aligned from "../generic/aligned";
 
 const Map = () => {
     const { data } = useDataStore();
@@ -42,16 +41,33 @@ const Map = () => {
                 </Marker>
             )}
             {center && (
-                <>
-                    <Marker position={center} draggable={false}>
-                        <Popup>{data.town?.nom ?? "Lieu recherché"}</Popup>
-                    </Marker>
-                    <Circle
-                        center={center}
-                        pathOptions={{ color: "white" }}
-                        radius={10000}></Circle>
-                </>
+                <Marker position={center} draggable={false}>
+                    <Popup>{data.town?.nom ?? "Lieu recherché"}</Popup>
+                </Marker>
             )}
+            {data.closestStations?.map((station) => {
+                const position = station.positions.find(
+                    (position) =>
+                        !position.dateFin ||
+                        position.dateFin === station.dateFin
+                )!;
+
+                return (
+                    <Marker
+                        key={station.id}
+                        position={[position.latitude, position.longitude]}>
+                        <Tooltip>
+                            <Aligned col>
+                                <span>
+                                    {station.id}, {Math.round(station.distance)}{" "}
+                                    km
+                                </span>
+                                <span>{station.nom}</span>
+                            </Aligned>
+                        </Tooltip>
+                    </Marker>
+                );
+            })}
         </MapContainer>
     );
 };
