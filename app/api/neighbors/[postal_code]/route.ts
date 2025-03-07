@@ -13,7 +13,8 @@ export async function GET(
                     (
                         await props.params
                     ).postal_code
-                }&rayon=30`
+                }&rayon=30`,
+                { signal: AbortSignal.timeout(5000) }
             ).then((res) =>
                 (
                     res.json() as unknown as Promise<{ code_postal: string }[]>
