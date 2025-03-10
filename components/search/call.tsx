@@ -169,16 +169,17 @@ export default function CallSearch() {
                 if (
                     !data.openStationPeriod?.from ||
                     !data.openStationPeriod.to ||
-                    moment(closestStationDetails.dateDebut).isBetween(
-                        moment(data.openStationPeriod.from),
-                        moment(data.openStationPeriod.to)
+                    moment(data.openStationPeriod.from).isBetween(
+                        moment(closestStationDetails.dateDebut),
+                        closestStationDetails.dateFin
+                            ? moment(closestStationDetails.dateFin)
+                            : moment()
                     ) ||
-                    (closestStationDetails.dateFin
-                        ? moment(closestStationDetails.dateFin)
-                        : moment()
-                    ).isBetween(
-                        moment(data.openStationPeriod.from),
-                        moment(data.openStationPeriod.to)
+                    moment(data.openStationPeriod.to).isBetween(
+                        moment(closestStationDetails.dateDebut),
+                        closestStationDetails.dateFin
+                            ? moment(closestStationDetails.dateFin)
+                            : moment()
                     )
                 ) {
                     closestStations.push(closestStationDetails);
