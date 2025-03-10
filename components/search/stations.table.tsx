@@ -49,6 +49,8 @@ export default function SearchStationTable() {
                         dataKey: "dateDebut",
                         label: "Ouverture",
                         filterKey: "start",
+                        render: (station) =>
+                            formatDate(moment(station.dateDebut)),
                     },
                     {
                         dataKey: "dateFin",
