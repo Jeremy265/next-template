@@ -155,17 +155,17 @@ export default function RequestStationTable() {
                         filterKey: "parameters",
                         render: (station) => {
                             if (!station.station) return "";
+                            const nbParams = station.station.parametres.filter(
+                                (parameter) => !parameter.dateFin
+                            ).length;
                             return (
                                 <CustomButton
                                     icon={<RemoveRedEyeIcon />}
                                     onClick={() =>
                                         setSelectedStation(station.station)
                                     }>
-                                    {toPlural(
-                                        "paramètre",
-                                        station.station.parametres.length ?? 0,
-                                        true
-                                    )}
+                                    {toPlural("paramètre", nbParams, true)}
+                                    {toPlural("disponible", nbParams, true)}
                                 </CustomButton>
                             );
                         },

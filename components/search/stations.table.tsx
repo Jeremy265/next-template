@@ -1,8 +1,10 @@
 import { useDataStore } from "@/lib/stores/data";
 import { ApiStationFromInformation } from "@/lib/type";
 import { toPlural } from "@/lib/utils/string.utils";
+import { formatDate } from "@/lib/utils/time.utils";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { Chip } from "@mui/material";
+import moment from "moment";
 import { useState } from "react";
 import CustomButton from "../generic/button";
 import CustomTable from "../generic/table/table";
@@ -52,22 +54,28 @@ export default function SearchStationTable() {
                         dataKey: "dateFin",
                         label: "Fermeture",
                         filterKey: "end",
+                        render: (station) =>
+                            !station.dateFin
+                                ? "Ouverte"
+                                : formatDate(moment(station.dateFin)),
                     },
                     {
                         dataKey: "parametres",
                         label: "Paramètres",
                         filterKey: "parameters",
-                        render: (station) => (
-                            <CustomButton
-                                icon={<RemoveRedEyeIcon />}
-                                onClick={() => setSelectedStation(station)}>
-                                {toPlural(
-                                    "paramètre",
-                                    station.parametres.length ?? 0,
-                                    true
-                                )}
-                            </CustomButton>
-                        ),
+                        render: (station) => {
+                            const nbParams = station.parametres.filter(
+                                (parameter) => !parameter.dateFin
+                            ).length;
+                            return (
+                                <CustomButton
+                                    icon={<RemoveRedEyeIcon />}
+                                    onClick={() => setSelectedStation(station)}>
+                                    {toPlural("paramètre", nbParams, true)}
+                                    {toPlural("disponible", nbParams)}
+                                </CustomButton>
+                            );
+                        },
                     },
                 ]}
             />

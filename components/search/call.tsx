@@ -209,7 +209,7 @@ export default function CallSearch() {
             onClick={handleApiCall}>
             Trouver les{" "}
             {toPlural("station", settings.numberOfClosestStations, true)} les
-            plus proches (30 km){" "}
+            plus proches{" "}
             {data.openStationPeriod?.from &&
                 data.openStationPeriod.to &&
                 `ouvertes sur la période ${getDisplayPeriod(
