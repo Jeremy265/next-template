@@ -22,6 +22,7 @@ export type Data = Partial<{
 interface DataState {
     data: Data;
     setData: (data: Data) => void;
+    resetData: () => void;
 }
 
 export const useDataStore = create<DataState>()(
@@ -30,6 +31,7 @@ export const useDataStore = create<DataState>()(
             (set) => ({
                 data: {},
                 setData: (data) => set(() => ({ data })),
+                resetData: () => set(() => ({ data: {} })),
             }),
             {
                 name: "data",

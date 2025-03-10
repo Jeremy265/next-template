@@ -1,9 +1,9 @@
 import { useDataStore } from "@/lib/stores/data";
 import LanguageIcon from "@mui/icons-material/Language";
-import Aligned from "../generic/aligned";
-import Field from "../generic/fields/field";
+import Aligned from "../aligned";
+import Field from "./field";
 
-export default function Coordinates() {
+export default function CoordinatesField() {
     const { data, setData } = useDataStore();
 
     return (

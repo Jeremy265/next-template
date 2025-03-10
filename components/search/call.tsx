@@ -166,17 +166,19 @@ export default function CallSearch() {
                     )),
                     distance: neighborStation.distance,
                 };
-
                 if (
                     !data.openStationPeriod?.from ||
                     !data.openStationPeriod.to ||
-                    moment(data.openStationPeriod.from).isBetween(
-                        moment(closestStationDetails.dateDebut),
-                        moment(closestStationDetails.dateFin)
+                    moment(closestStationDetails.dateDebut).isBetween(
+                        moment(data.openStationPeriod.from),
+                        moment(data.openStationPeriod.to)
                     ) ||
-                    moment(data.openStationPeriod.to).isBetween(
-                        moment(closestStationDetails.dateDebut),
-                        moment(closestStationDetails.dateFin)
+                    (closestStationDetails.dateFin
+                        ? moment(closestStationDetails.dateFin)
+                        : moment()
+                    ).isBetween(
+                        moment(data.openStationPeriod.from),
+                        moment(data.openStationPeriod.to)
                     )
                 ) {
                     closestStations.push(closestStationDetails);

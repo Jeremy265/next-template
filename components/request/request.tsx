@@ -1,27 +1,28 @@
 "use client";
 
 import { useDataStore } from "@/lib/stores/data";
+import { useSettingsStore } from "@/lib/stores/settings";
 import {
     formatMeasureToExport,
     formatStationToExport,
 } from "@/lib/utils/csv.utils";
 import { exportToExcel } from "@/lib/utils/excel.utils";
-import { isStationIdValid } from "@/lib/utils/station.utils";
 import { getDisplayPeriod } from "@/lib/utils/time.utils";
-import CastIcon from "@mui/icons-material/Cast";
 import DownloadIcon from "@mui/icons-material/Download";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Aligned from "../generic/aligned";
 import CustomButton from "../generic/button";
-import Field from "../generic/fields/field";
-import PeriodField from "../generic/fields/period.field";
+import InputStationsField from "../generic/fields/inputStations.field";
+import WeatherDataPeriodField from "../generic/fields/weatherDataPeriod.field";
+import WeatherParametersToExportField from "../generic/fields/weatherParametersToExport.field";
 import RequestStationTable from "./stations.table";
 
 const Call = dynamic(() => import("./call"), { ssr: false });
 
 export default function RequestView() {
     const { data, setData } = useDataStore();
+    const { settings, setSettings } = useSettingsStore();
 
     const dates = data.stations?.flatMap(
         (station) =>
@@ -40,59 +41,12 @@ export default function RequestView() {
 
     return (
         <Aligned col>
-            <Field
-                defaultValue={data.inputStations}
-                label="Stations"
-                helperText="Coller la liste des identifiants séparés par un retour à la ligne, une virgule, un point-virgule ou un tiret. Chaque identifiant doit être composé de 8 chiffres."
-                startAdornment={<CastIcon />}
-                onChange={(inputStations: string) =>
-                    setData({
-                        ...data,
-                        inputStations,
-                        stations: inputStations
-                            ?.trim()
-                            .split(/[\n,;-]/)
-                            .map((id) => ({
-                                id: id.trim(),
-                                status: !isStationIdValid(id)
-                                    ? "error"
-                                    : "ready",
-                                infos: !isStationIdValid(id)
-                                    ? ["Identifiant erroné"]
-                                    : [],
-                            })),
-                    })
-                }
-            />
-            <PeriodField
-                label="Période de données météo"
-                defaultValue={{
-                    from: data.weatherDataRequestPeriod?.from
-                        ? moment(data.weatherDataRequestPeriod.from)
-                        : undefined,
-                    to: data.weatherDataRequestPeriod?.to
-                        ? moment(data.weatherDataRequestPeriod.to)
-                        : undefined,
-                }}
-                onFromChange={(from) =>
-                    setData({
-                        ...data,
-                        weatherDataRequestPeriod: {
-                            ...data.weatherDataRequestPeriod,
-                            from: from,
-                        },
-                    })
-                }
-                onToChange={(to) =>
-                    setData({
-                        ...data,
-                        weatherDataRequestPeriod: {
-                            ...data.weatherDataRequestPeriod,
-                            to: to,
-                        },
-                    })
-                }
-            />
+            <InputStationsField />
+            <WeatherDataPeriodField />
+            {data.weatherDataRequestPeriod?.from &&
+                data.weatherDataRequestPeriod.to && (
+                    <WeatherParametersToExportField />
+                )}
             <RequestStationTable />
             <Aligned col centered>
                 <Call />

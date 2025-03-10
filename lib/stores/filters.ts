@@ -8,6 +8,7 @@ type Filters = {
 interface FiltersState {
     filters: Filters;
     setFilters: (filters: Filters) => void;
+    resetFilters: () => void;
 }
 
 export const useFiltersStore = create<FiltersState>()(
@@ -16,6 +17,7 @@ export const useFiltersStore = create<FiltersState>()(
             (set) => ({
                 filters: {},
                 setFilters: (filters) => set(() => ({ filters })),
+                resetFilters: () => set(() => ({ filters: {} })),
             }),
             {
                 name: "filters",

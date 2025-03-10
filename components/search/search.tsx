@@ -2,14 +2,12 @@
 
 import { useDataStore } from "@/lib/stores/data";
 import { useSettingsStore } from "@/lib/stores/settings";
-import CastConnectedIcon from "@mui/icons-material/CastConnected";
 import { Box } from "@mui/material";
-import moment from "moment";
 import dynamic from "next/dynamic";
 import Aligned from "../generic/aligned";
-import Field from "../generic/fields/field";
-import PeriodField from "../generic/fields/period.field";
-import Coordinates from "./coordinates";
+import CoordinatesField from "../generic/fields/coordinates.field";
+import NumberOfClosestStationsField from "../generic/fields/numberOfClosestStations.field";
+import OpenStationPeriodField from "../generic/fields/openStationPeriod.field";
 import SearchStationTable from "./stations.table";
 
 const PositionField = dynamic(
@@ -41,48 +39,9 @@ export default function SearchView() {
                 <Aligned col>
                     <PositionField />
                     <TownField />
-                    <Coordinates />
-                    <Field
-                        type="numeric"
-                        defaultValue={settings.numberOfClosestStations}
-                        onChange={(numberOfClosestStations) =>
-                            setSettings({
-                                ...settings,
-                                numberOfClosestStations,
-                            })
-                        }
-                        label="Nombre de station les plus proches"
-                        startAdornment={<CastConnectedIcon />}
-                    />
-                    <PeriodField
-                        label="Période d'ouverture"
-                        defaultValue={{
-                            from: data.openStationPeriod?.from
-                                ? moment(data.openStationPeriod.from)
-                                : undefined,
-                            to: data.openStationPeriod?.to
-                                ? moment(data.openStationPeriod.to)
-                                : undefined,
-                        }}
-                        onFromChange={(from) =>
-                            setData({
-                                ...data,
-                                openStationPeriod: {
-                                    ...data.openStationPeriod,
-                                    from: from,
-                                },
-                            })
-                        }
-                        onToChange={(to) =>
-                            setData({
-                                ...data,
-                                openStationPeriod: {
-                                    ...data.openStationPeriod,
-                                    to: to,
-                                },
-                            })
-                        }
-                    />
+                    <CoordinatesField />
+                    <NumberOfClosestStationsField />
+                    <OpenStationPeriodField />
                 </Aligned>
                 <Map />
             </Aligned>
