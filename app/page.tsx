@@ -18,12 +18,12 @@ export default async function Home() {
             />
             <Box>
                 <Typography variant="h5">
-                    {authenticatedUser?.full_name},
+                    {authenticatedUser?.first_name}{" "}
+                    {authenticatedUser?.last_name},
                 </Typography>
-                <Typography variant="h6">Interface API Météo France</Typography>
+                <Typography variant="h6">Your app title</Typography>
                 <Typography textAlign="justify">
-                    Cette application permet de communiquer avec l&apos;API
-                    Météo France qui a cessé de fonctionner en octobre 2024.
+                    Your app description
                 </Typography>
             </Box>
         </Aligned>

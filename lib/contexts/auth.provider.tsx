@@ -1,14 +1,14 @@
 "use client";
 
 import { createContext, ReactNode } from "react";
-import { LdapUser } from "../type";
+import { User } from "../type";
 
 export const AuthContext = createContext<{
-    user?: LdapUser | null;
+    user?: User | null;
 }>({});
 
 type Props = {
-    user: LdapUser | null;
+    user: User | null;
     children: ReactNode;
 };
 

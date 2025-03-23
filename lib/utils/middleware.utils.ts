@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { LdapUser, MiddlewareRedirection } from "../type";
+import { MiddlewareRedirection, User } from "../type";
 import { formatPathname } from "./string.utils";
 
 const getResponseError = (
@@ -35,7 +35,7 @@ export const middlewareRedirections: MiddlewareRedirection = {
     ),
 };
 
-export const getHeaders = (request: NextRequest, user: LdapUser) => {
+export const getHeaders = (request: NextRequest, user: User) => {
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("next-url", request.nextUrl.pathname);
     requestHeaders.set("authenticated-user", JSON.stringify(user));
@@ -61,13 +61,8 @@ export const handleMiddlewareRedirection = (
     });
 };
 
-export const getTokenInfo = async (token: string): Promise<any> =>
-    fetch("https://app.roqs.basf.net/auth/token2info", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            token: token.replace("Bearer ", "").trim(),
-        }),
-    }).then((response) => response.json());
+export const readToken = async (token: string): Promise<User> => ({
+    first_name: "John",
+    last_name: "Doe",
+    mail: "john.doe@mock.com",
+});

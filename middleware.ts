@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { LdapUser } from "./lib/type";
+import { User } from "./lib/type";
 import {
     getHeaders,
-    getTokenInfo,
     handleMiddlewareRedirection,
     isApiRequest,
     middlewareRedirections,
+    readToken,
 } from "./lib/utils/middleware.utils";
 
-const handleAuthenticated = async (request: NextRequest, user: LdapUser) => {
+const handleAuthenticated = async (request: NextRequest, user: User) => {
     return NextResponse.next({
         request: {
             headers: getHeaders(request, user),
@@ -19,7 +19,7 @@ const handleAuthenticated = async (request: NextRequest, user: LdapUser) => {
 export async function middleware(request: NextRequest) {
     if (isApiRequest(request)) return NextResponse.next();
 
-    const token = request.cookies.get("basf_federation_access_token")?.value;
+    const token = "mock"; //request.cookies.get("token")?.value;
 
     if (!token) {
         return handleMiddlewareRedirection(
@@ -28,29 +28,15 @@ export async function middleware(request: NextRequest) {
         );
     }
 
-    return await getTokenInfo(token)
-        .then((tokenInfo) => {
-            if (!tokenInfo.user_id)
-                return handleMiddlewareRedirection(
-                    request,
-                    middlewareRedirections.invalidToken
-                );
-            return fetch(
-                `https://app.roqs.basf.net/ldap/api/v2/users/${tokenInfo.user_id}`,
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            )
-                .then((o) => o.json())
-                .then(async (ldapUser: LdapUser) =>
-                    ldapUser.error
-                        ? handleMiddlewareRedirection(
-                              request,
-                              middlewareRedirections.userNotFound
-                          )
-                        : handleAuthenticated(request, ldapUser)
-                );
-        })
+    return await readToken(token)
+        .then((user) =>
+            !user
+                ? handleMiddlewareRedirection(
+                      request,
+                      middlewareRedirections.userNotFound
+                  )
+                : handleAuthenticated(request, user)
+        )
         .catch(() =>
             handleMiddlewareRedirection(
                 request,

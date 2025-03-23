@@ -5,8 +5,8 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import AppNav from "../navs/app.nav";
 import NavMobile from "../navs/mobile.nav";
-import Login from "./login";
 import Logo from "./logo";
+import Profile from "./profile";
 
 export default async function Header() {
     return (
@@ -57,7 +57,7 @@ export default async function Header() {
                             direction="row"
                             alignItems="center"
                             justifyContent="end">
-                            <Login />
+                            <Profile />
                         </Stack>
                     </Stack>
                 </Toolbar>

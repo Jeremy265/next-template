@@ -11,8 +11,8 @@ import { ToastContainer } from "react-toastify";
 import "./globals.css";
 
 export const metadata: Metadata = {
-    title: "Interface API Météo France",
-    description: "Interface API Météo France",
+    title: "Your app title",
+    description: "Your app description",
 };
 
 export default async function RootLayout({

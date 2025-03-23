@@ -1,5 +1,7 @@
+"use client";
+
 import { AuthContext } from "@/lib/contexts/auth.provider";
-import { stringToBoolean } from "@/lib/utils/string.utils";
+import { formatUrl } from "@/lib/utils/string.utils";
 import { Avatar, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useContext, useState } from "react";
 
@@ -9,15 +11,13 @@ export default function Profile() {
     const open = Boolean(anchorEl);
     return (
         <>
-            <Tooltip title={`${user.full_name}`}>
+            <Tooltip title={`${user.first_name} ${user.last_name}`}>
                 <IconButton
                     sx={{ marginLeft: "8px", p: 0 }}
                     onClick={(event: React.MouseEvent<HTMLElement>) => {
                         setAnchorEl(event.currentTarget);
                     }}>
-                    <Avatar
-                        src={`https://app.roqs.basf.net/user_picture_api/image/${user.username}`}
-                    />
+                    <Avatar src={formatUrl("logo.jpg")} />
                 </IconButton>
             </Tooltip>
             <Menu
@@ -26,22 +26,10 @@ export default function Profile() {
                 onClose={() => {
                     setAnchorEl(null);
                 }}>
-                <MenuItem>{user.full_name}</MenuItem>
                 <MenuItem>
-                    {user.username}, {user.mail}
-                    {user.phone ? `, ${user.phone}` : ""}
+                    {user.first_name} {user.last_name}
                 </MenuItem>
-                <MenuItem>
-                    {user.company}, {user.region}, {user.country} (
-                    {user.org_code})
-                </MenuItem>
-                <MenuItem>
-                    {user.street}, {user.postal_code} {user.site}, {user.state}
-                </MenuItem>
-                <MenuItem>
-                    {user.type === "contractor" ? "Prestataire " : ""}
-                    {stringToBoolean(user.login_disabled) ? "Inactif" : "Actif"}
-                </MenuItem>
+                <MenuItem>{user.mail}</MenuItem>
             </Menu>
         </>
     );
