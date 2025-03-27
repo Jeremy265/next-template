@@ -4,9 +4,9 @@ import Skeleton from "@mui/material/Skeleton";
 export default function CardSkeleton() {
     return (
         <Grid container direction="column">
-            <Grid item>
+            <Grid>
                 <Grid container justifyContent="space-between">
-                    <Grid item>
+                    <Grid>
                         <Skeleton
                             variant="rectangular"
                             width={150}
@@ -15,10 +15,10 @@ export default function CardSkeleton() {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item>
+            <Grid>
                 <Skeleton variant="rectangular" sx={{ my: 2 }} height={50} />
             </Grid>
-            <Grid item>
+            <Grid>
                 <Skeleton variant="rectangular" height={60} />
             </Grid>
         </Grid>
