@@ -24,7 +24,7 @@ export default async function RootLayout({
 
     return (
         <html lang="fr">
-            <link rel="icon" href={formatUrl("logo.jpg")} sizes="any" />
+            <link rel="icon" href={formatUrl("logo.png")} sizes="any" />
             <body>
                 <ToastContainer position="top-center" newestOnTop draggable />
                 <Helper />

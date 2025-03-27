@@ -1,6 +1,6 @@
 import Aligned from "@/components/generic/aligned";
 import { getAuthenticatedUser } from "@/lib/utils/users.utils";
-import logo from "@/public/logo.jpg";
+import logo from "@/public/logo.png";
 import { Box, Typography } from "@mui/material";
 import { headers } from "next/headers";
 import Image from "next/image";
@@ -11,7 +11,7 @@ export default async function Home() {
     return (
         <Aligned space={2}>
             <Image
-                style={{ width: "auto", height: "100%" }}
+                style={{ width: "50%", height: "100%" }}
                 src={logo}
                 alt="Logo"
                 unoptimized

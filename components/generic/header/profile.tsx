@@ -17,7 +17,7 @@ export default function Profile() {
                     onClick={(event: React.MouseEvent<HTMLElement>) => {
                         setAnchorEl(event.currentTarget);
                     }}>
-                    <Avatar src={formatUrl("logo.jpg")} />
+                    <Avatar src={formatUrl("logo.png")} />
                 </IconButton>
             </Tooltip>
             <Menu

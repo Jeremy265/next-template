@@ -1,5 +1,5 @@
 import { formatUrl } from "@/lib/utils/string.utils";
-import logo from "@/public/logo.jpg";
+import logo from "@/public/logo.png";
 import Image from "next/image";
 import Link from "next/link";
 
