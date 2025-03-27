@@ -8,6 +8,8 @@ import Expandable from "./generic/expandable";
 import AutocompleteField from "./generic/fields/autocomplete.field";
 import DateField from "./generic/fields/date.field";
 import Field from "./generic/fields/field";
+import TimerField from "./generic/fields/timer.field";
+import UploadField from "./generic/fields/upload.field";
 import CustomModal from "./generic/modal";
 import ListItemSkeleton from "./generic/skeletons/list.skeleton";
 import CustomTable from "./generic/table/table";
@@ -16,8 +18,15 @@ export default function CustomComponent() {
     const [open, setOpen] = useState(false);
     return (
         <Aligned col>
+            <Typography>List item skeleton loader</Typography>
             <ListItemSkeleton />
-            <Field label="Custom field" />
+            <TimerField label="Custom timer field" />
+            <Field label="Custom field" helperText="This is an helper text" />
+            <Field
+                label="Custom field with error"
+                error
+                helperText="This is an error text"
+            />
             <AutocompleteField
                 label="Searchable field"
                 schema={{
@@ -74,6 +83,7 @@ export default function CustomComponent() {
                 open={open}
                 onClose={() => setOpen(false)}>
                 <Typography>Content</Typography>
+                <UploadField />
             </CustomModal>
             <Expandable title="Expandable title" paper>
                 <Typography>Expandable content</Typography>

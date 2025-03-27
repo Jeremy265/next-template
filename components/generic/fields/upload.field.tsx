@@ -1,7 +1,8 @@
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Typography, styled } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import CustomButton from "../buttons/button";
+import CustomButton from "../button";
+import { FieldProps } from "./field";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -15,13 +16,7 @@ const VisuallyHiddenInput = styled("input")({
     width: 1,
 });
 
-type Props<T> = {
-    id: string;
-    onChange?: (formData: FormData | undefined) => void;
-    required?: boolean;
-};
-
-export default function UploadField<T>(props: Props<T>) {
+export default function UploadField<T>(props: FieldProps) {
     const [file, setFile] = useState<string | null>(null);
 
     return (
