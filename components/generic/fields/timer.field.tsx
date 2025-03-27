@@ -1,9 +1,10 @@
 import { editIcon, errorIcon, successIcon } from "@/lib/utils/icon.utils";
-import { formatUrl } from "@/lib/utils/primitives/string.utils";
+
+import { formatUrl } from "@/lib/utils/string.utils";
 import {
     decomposeDurationInSeconds,
     displayDuration,
-} from "@/lib/utils/primitives/time.utils";
+} from "@/lib/utils/time.utils";
 import TimerIcon from "@mui/icons-material/Timer";
 import TimerOffIcon from "@mui/icons-material/TimerOff";
 import { InputAdornment } from "@mui/material";
@@ -13,7 +14,7 @@ import moment, { Moment } from "moment";
 import { useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
 import Aligned from "../aligned";
-import CustomButton from "../buttons/button";
+import CustomButton from "../button";
 import Progress from "../progress";
 import { FieldProps } from "./field";
 
@@ -99,10 +100,8 @@ function TimerField(props: Props) {
                             slotProps={{
                                 textField: {
                                     variant: "standard",
-                                    fullWidth: true,
                                     error: props.error,
                                     helperText: props.helperText,
-                                    required: true,
                                     InputProps: {
                                         startAdornment:
                                             props.isConform !== undefined ? (
